@@ -165,6 +165,11 @@ class Route {
 						}
 					}
 
+					// Does the route have a specified host and does it match the request?
+					if( array_key_exists( 'host', $route ) && $route['host'] != $host ) { continue; }
+					// Does the requested method match the route's method?
+					if( $route['method'] != $method ) { continue; }
+
 					// Is the updated requested path the same as the current route path?
 					if( $req_path == $route['path'] ) {
 						// Let's assume this is the route requested, save it for later.
@@ -172,7 +177,9 @@ class Route {
 					}
 				}
 			// Route does not require parameters, perform a simple path match.
-			} else if( $path && is_array( $route ) && $route['path'] == $path ) {
+			} else if( $path && $route['path'] == $path && $method == $route['method'] ) {
+				if( array_key_exists( 'host', $route ) && $route['host'] != $host ) { continue; }
+
 				// Let's assume this is the route requested, save it for later.
 				$req_route = $route;
 			}
